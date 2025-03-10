@@ -1,0 +1,57 @@
+<!-- 
+  Services Section 
+  --------------
+  Esta sección muestra los servicios que ofrece la empresa.
+  Las tarjetas se generan dinámicamente desde la configuración.
+-->
+<section class="section section-bg" id="services">
+    <div class="container">
+        <div class="section-header">
+            <span class="section-subtitle">{{config.sections.services.subtitle}}</span>
+            <h2 class="section-title">{{config.sections.services.title}}</h2>
+            <p class="section-description">{{config.sections.services.description}}</p>
+        </div>
+
+        <div class="services-grid" id="services-grid">
+            <!-- Las tarjetas de servicios se generan dinámicamente desde JavaScript -->
+        </div>
+    </div>
+</section>
+
+<script>
+    // Generar tarjetas de servicios desde la configuración
+    document.addEventListener('DOMContentLoaded', function() {
+        // Obtener el contenedor de servicios
+        const servicesGrid = document.getElementById('services-grid');
+        if (!servicesGrid) return;
+        
+        // Obtener los servicios desde la configuración
+        const services = getConfig('sections.services.items', []);
+        
+        // Crear una tarjeta para cada servicio
+        if (Array.isArray(services)) {
+            services.forEach((service, index) => {
+                // Crear tarjeta
+                const card = document.createElement('div');
+                card.className = 'service-card slide-up';
+                card.setAttribute('data-aos-delay', (index * 100).toString());
+                
+                // Contenido de la tarjeta
+                card.innerHTML = `
+                    <div class="service-header">
+                        <div class="service-icon">
+                            <i class="fas ${service.icon}"></i>
+                        </div>
+                    </div>
+                    <div class="service-content">
+                        <h3 class="service-title">${service.title}</h3>
+                        <p>${service.description}</p>
+                    </div>
+                `;
+                
+                // Añadir al grid
+                servicesGrid.appendChild(card);
+            });
+        }
+    });
+</script>

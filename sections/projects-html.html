@@ -1,0 +1,88 @@
+<!-- 
+  Projects Section 
+  --------------
+  Esta sección muestra los proyectos destacados de la empresa.
+  Incluye filtros por categoría y tarjetas de proyecto.
+-->
+<section class="section" id="projects">
+    <div class="container">
+        <div class="section-header">
+            <span class="section-subtitle">{{config.sections.projects.subtitle}}</span>
+            <h2 class="section-title">{{config.sections.projects.title}}</h2>
+            <p class="section-description">{{config.sections.projects.description}}</p>
+        </div>
+
+        <div class="projects-filters" id="projects-filters">
+            <!-- Los filtros se generan dinámicamente desde JavaScript -->
+        </div>
+
+        <div class="projects-grid" id="projects-grid">
+            <!-- Las tarjetas de proyectos se generan dinámicamente desde JavaScript -->
+        </div>
+    </div>
+</section>
+
+<script>
+    // Generar filtros y proyectos desde la configuración
+    document.addEventListener('DOMContentLoaded', function() {
+        // Obtener contenedores
+        const filtersContainer = document.getElementById('projects-filters');
+        const projectsGrid = document.getElementById('projects-grid');
+        
+        if (!filtersContainer || !projectsGrid) return;
+        
+        // Obtener categorías y proyectos desde la configuración
+        const categories = getConfig('sections.projects.categories', []);
+        const projects = getConfig('sections.projects.items', []);
+        
+        // Generar filtros
+        if (Array.isArray(categories)) {
+            categories.forEach((category, index) => {
+                const button = document.createElement('button');
+                button.className = 'filter-btn' + (index === 0 ? ' active' : '');
+                button.setAttribute('data-filter', category.id);
+                button.textContent = category.name;
+                
+                filtersContainer.appendChild(button);
+            });
+        }
+        
+        // Generar proyectos
+        if (Array.isArray(projects)) {
+            projects.forEach((project, index) => {
+                // Crear tarjeta
+                const card = document.createElement('div');
+                card.className = 'project-card slide-up';
+                card.setAttribute('data-category', project.category);
+                card.setAttribute('data-aos-delay', (index * 100).toString());
+                
+                // Contenido de la tarjeta
+                card.innerHTML = `
+                    <div class="project-icon">
+                        <i class="fas ${project.icon}"></i>
+                    </div>
+                    <div class="project-overlay">
+                        <div class="project-category">${getCategoryName(project.category, categories)}</div>
+                        <h3 class="project-title">${project.title}</h3>
+                    </div>
+                `;
+                
+                // Añadir al grid
+                projectsGrid.appendChild(card);
+            });
+        }
+    });
+    
+    /**
+     * Obtiene el nombre de una categoría a partir de su ID
+     * @param {string} categoryId - ID de la categoría
+     * @param {Array} categories - Lista de categorías
+     * @returns {string} - Nombre de la categoría
+     */
+    function getCategoryName(categoryId, categories) {
+        if (!Array.isArray(categories)) return categoryId;
+        
+        const category = categories.find(cat => cat.id === categoryId);
+        return category ? category.name : categoryId;
+    }
+</script>

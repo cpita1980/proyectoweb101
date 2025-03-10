@@ -1,0 +1,74 @@
+<!-- 
+  About Section 
+  ------------
+  Esta sección contiene información sobre la empresa.
+  Incluye estadísticas y una descripción general.
+-->
+<section class="section" id="about">
+    <div class="container">
+        <div class="section-header">
+            <span class="section-subtitle">{{config.sections.about.subtitle}}</span>
+            <h2 class="section-title">{{config.sections.about.title}}</h2>
+            <p class="section-description">{{config.sections.about.description}}</p>
+        </div>
+
+        <div class="about-container">
+            <div class="about-content slide-up">
+                <h2>Construimos con <span>excelencia</span></h2>
+                
+                <!-- Contenido desde config -->
+                <div id="about-paragraphs">
+                    <!-- Se genera dinámicamente desde JavaScript -->
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-number" data-count="{{config.companyInfo.yearsExperience}}">0</div>
+                        <div class="stat-label">Años de experiencia</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number" data-count="{{config.companyInfo.projectsCompleted}}">0</div>
+                        <div class="stat-label">Proyectos completados</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number" data-count="{{config.companyInfo.clientsSatisfied}}">0</div>
+                        <div class="stat-label">Clientes satisfechos</div>
+                    </div>
+                </div>
+                
+                <a href="{{config.sections.about.buttonLink}}" class="btn">{{config.sections.about.buttonText}}</a>
+            </div>
+            
+            <div class="about-image slide-up">
+                <div class="about-image-icon">
+                    <i class="fas fa-building"></i>
+                </div>
+                <div class="experience-badge">
+                    <div class="badge-number">{{config.companyInfo.yearsExperience}}</div>
+                    <div class="badge-text">años de experiencia</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    // Generar párrafos desde la configuración
+    document.addEventListener('DOMContentLoaded', function() {
+        // Obtener el contenedor de párrafos
+        const paragraphsContainer = document.getElementById('about-paragraphs');
+        if (!paragraphsContainer) return;
+        
+        // Obtener los párrafos desde la configuración
+        const paragraphs = getConfig('sections.about.content', []);
+        
+        // Crear un elemento p para cada párrafo
+        if (Array.isArray(paragraphs)) {
+            paragraphs.forEach(paragraph => {
+                const p = document.createElement('p');
+                p.textContent = paragraph;
+                paragraphsContainer.appendChild(p);
+            });
+        }
+    });
+</script>

@@ -1,0 +1,105 @@
+<!-- 
+  Contact Section 
+  -------------
+  Esta sección contiene información de contacto y un formulario
+  para que los visitantes se comuniquen con la empresa.
+-->
+<section class="section" id="contact">
+    <div class="container">
+        <div class="section-header">
+            <span class="section-subtitle">{{config.sections.contact.subtitle}}</span>
+            <h2 class="section-title">{{config.sections.contact.title}}</h2>
+            <p class="section-description">{{config.sections.contact.description}}</p>
+        </div>
+
+        <div class="contact-container">
+            <div class="contact-info slide-up">
+                <h3 class="contact-heading">Información de contacto</h3>
+                <ul class="contact-info-list">
+                    <li class="contact-info-item">
+                        <div class="contact-icon-box">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div class="contact-info-content">
+                            <h4>Oficina central</h4>
+                            <p>{{config.contact.address}}</p>
+                        </div>
+                    </li>
+                    <li class="contact-info-item">
+                        <div class="contact-icon-box">
+                            <i class="fas fa-phone-alt"></i>
+                        </div>
+                        <div class="contact-info-content">
+                            <h4>Teléfono</h4>
+                            <p><a href="tel:{{config.contact.phone}}">{{config.contact.phone}}</a></p>
+                            <p>{{config.contact.scheduleText}}</p>
+                        </div>
+                    </li>
+                    <li class="contact-info-item">
+                        <div class="contact-icon-box">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="contact-info-content">
+                            <h4>Email</h4>
+                            <p><a href="mailto:{{config.contact.email}}">{{config.contact.email}}</a></p>
+                        </div>
+                    </li>
+                </ul>
+                
+                <div class="social-icons">
+                    <a href="{{config.contact.socialMedia.facebook}}" class="social-icon" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                    <a href="{{config.contact.socialMedia.twitter}}" class="social-icon" target="_blank"><i class="fab fa-twitter"></i></a>
+                    <a href="{{config.contact.socialMedia.instagram}}" class="social-icon" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="{{config.contact.socialMedia.linkedin}}" class="social-icon" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+            
+            <div class="contact-form slide-up">
+                <h3 class="form-heading">{{config.sections.contact.formTitle}}</h3>
+                <form id="contact-form">
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="name" placeholder="{{config.sections.contact.formFields.name}}" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" class="form-control" name="email" placeholder="{{config.sections.contact.formFields.email}}" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="tel" class="form-control" name="phone" placeholder="{{config.sections.contact.formFields.phone}}">
+                    </div>
+                    <div class="form-group">
+                        <select class="form-control form-select" name="service" required>
+                            <option value="" disabled selected>{{config.sections.contact.formFields.service}}</option>
+                            <!-- Las opciones se generan dinámicamente desde JavaScript -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <textarea class="form-control form-textarea" name="message" placeholder="{{config.sections.contact.formFields.message}}" required></textarea>
+                    </div>
+                    <button type="submit" class="btn-submit">{{config.sections.contact.submitButtonText}}</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    // Poblar opciones del formulario desde la configuración
+    document.addEventListener('DOMContentLoaded', function() {
+        // Obtener el selector de servicios
+        const serviceSelect = document.querySelector('select[name="service"]');
+        if (!serviceSelect) return;
+        
+        // Obtener servicios desde la configuración
+        const services = getConfig('sections.contact.formServices', []);
+        
+        // Crear una opción para cada servicio
+        if (Array.isArray(services)) {
+            services.forEach(service => {
+                const option = document.createElement('option');
+                option.value = service.value;
+                option.textContent = service.label;
+                serviceSelect.appendChild(option);
+            });
+        }
+    });
+</script>

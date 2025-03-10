@@ -1,0 +1,25 @@
+<!-- 
+  Hero Section 
+  -----------
+  Esta es la sección principal que aparece al cargar la página.
+  Contiene el título principal y botones de llamada a la acción.
+-->
+<section class="hero" id="home">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="container">
+        <div class="hero-content fade-in">
+            <span class="hero-subtitle">{{config.sections.hero.subtitle}}</span>
+            <h1>{{config.sections.hero.title}}</h1>
+            <p>{{config.sections.hero.description}}</p>
+            <div class="hero-buttons">
+                <a href="{{config.sections.hero.primaryButton.link}}" class="btn">{{config.sections.hero.primaryButton.text}}</a>
+                <a href="{{config.sections.hero.secondaryButton.link}}" class="btn btn-outline">{{config.sections.hero.secondaryButton.text}}</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    // Script específico para la sección hero si es necesario
+</script>

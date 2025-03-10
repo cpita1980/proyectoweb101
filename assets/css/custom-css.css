@@ -1,0 +1,95 @@
+/**
+ * Estilos personalizados
+ * ---------------------
+ * Este archivo está pensado para personalizaciones específicas
+ * sin tener que modificar el archivo principal de estilos.
+ * Tiene prioridad sobre los estilos en style.css.
+ */
+
+/* Ejemplo: Cambiar la fuente de los títulos */
+/*
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Georgia', serif;
+}
+*/
+
+/* Ejemplo: Añadir un fondo personalizado a una sección */
+/*
+#about {
+    background-image: url('../img/background.jpg');
+    background-size: cover;
+    background-position: center;
+}
+*/
+
+/* Ejemplo: Personalizar el botón de contacto */
+/*
+.btn-submit {
+    background: linear-gradient(to right, #F7B500, #FFA500);
+    font-weight: 700;
+}
+*/
+
+/* Añade tus personalizaciones aquí */
+
+/* Notificaciones */
+.notification-alert {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 25px;
+    border-radius: 5px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    z-index: 1000;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.notification-alert.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Personalización del cursor */
+.custom-cursor {
+    position: fixed;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: rgba(247, 181, 0, 0.5);
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s ease, width 0.2s ease, height 0.2s ease;
+    display: none;
+}
+
+.cursor-dot {
+    position: fixed;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background-color: var(--secondary);
+    pointer-events: none;
+    z-index: 10000;
+    transform: translate(-50%, -50%);
+    display: none;
+}
+
+/* Solo mostrar cursor personalizado en dispositivos de escritorio */
+@media (min-width: 992px) {
+    .custom-cursor, .cursor-dot {
+        display: block;
+    }
+    
+    /* Ocultar cursor predeterminado */
+    body {
+        cursor: none;
+    }
+    
+    /* Restablecer cursor en elementos interactivos */
+    a, button, input, textarea, select, .btn, .nav-link, .filter-btn, .social-icon, .back-to-top {
+        cursor: none;
+    }
+}

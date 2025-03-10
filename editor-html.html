@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editor de Configuración - Naga Constructora</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0A0A0A;
+            --secondary: #F7B500;
+            --dark: #0D1B2A;
+            --light: #F8F9FA;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            padding-top: 56px;
+        }
+        
+        .navbar {
+            background-color: var(--primary);
+        }
+        
+        .navbar-brand {
+            color: white;
+            font-weight: bold;
+        }
+        
+        .navbar-brand span {
+            color: var(--secondary);
+        }
+        
+        .sidebar {
+            position: fixed;
+            top: 56px;
+            left: 0;
+            height: calc(100vh - 56px);
+            width: 250px;
+            background-color: white;
+            border-right: 1px solid #dee2e6;
+            overflow-y: auto;
+            z-index: 1;
+            padding: 1rem 0;
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .sidebar-item {
+            padding: 0.5rem 1rem;
+        }
+        
+        .sidebar-link {
+            display: block;
+            padding: 0.5rem 1rem;
+            color: var(--dark);
+            text-decoration: none;
+            border-radius: 0.25rem;
+            transition: all 0.2s;
+        }
+        
+        .sidebar-link:hover {
+            background-color: #f8f9fa;
+            color: var(--secondary);
+        }
+        
+        .sidebar-link.active {
+            background-color: var(--secondary);
+            color: var(--dark);
+            font-weight: bold;
+        }
+        
+        .content {
+            margin-left: 250px;
+            padding: 2rem;
+        }
+        
+        .card {
+            margin-bottom: 2rem;
+            border: none;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.05);
+        }
+        
+        .card-header {
+            background-color: var(--primary);
+            color: white;
+            font-weight: bold;
+        }
+        
+        .btn-primary {
+            background-color: var(--secondary);
+            border-color: var(--secondary);
+            color: var(--dark);
+        }
+        
+        .btn-primary:hover {
+            background-color: #e6a800;
+            border-color: #e6a800;
+            color: var(--dark);
+        }
+        
+        .form-label {
+            font-weight: bold;
+        }
+        
+        .form-text {
+            color: #6c757d;
+        }
+        
+        .color-preview {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            margin-right: 10px;
+            border: 1px solid #dee2e6;
+            vertical-align: middle;
+        }
+        
+        #preview-iframe {
+            width: 100%;
+            height: 500px;
+            border: 1px solid #dee2e6;
+            border-radius: 0.25rem;
+        }
+        
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .sidebar.show {
+                transform: translateX(0);
+            }
+            
+            .content {
+                margin-left: 0;
+            }
+            
+            .toggle-sidebar {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Naga <span>Constructora</span> - Editor</a>
+            <button class="navbar-toggler toggle-sidebar" type="button">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html" target="_blank">Ver Sitio</a>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-outline-light btn-sm" id="save-config">Guardar Cambios</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <ul class="sidebar-menu">
+            <li class="sidebar-item">
+                <a href="#general" class="sidebar-link active" data-bs-toggle="tab">Información General</a>
+            </li>
+            <li class="sidebar-item">
+                <a href="#contact" class="sidebar-link" data-bs-toggle="tab">Contacto</a>
+            </li>
+            <li class="sidebar-item">
+                <a href="#colors" class="sidebar-link" data-bs-toggle="tab">Colores</a>
+            </li>
+            <li class="sidebar-item">
+                <a href="#hero" class="sidebar-link" data-bs-toggle="tab">Hero</a>
+            </li>
+            <li class="sidebar-item">
+                <a href="#about" class="sidebar-link" data-bs-toggle="tab">Nosotros</a>
+            </li>
+            <li class="sidebar-item">
+                <a href="#services" class="sidebar-link" data-bs-toggle="tab">Servicios</a>
+            </li>
+            <li class="sidebar-item">
+                <a href="#cta" class="sidebar-link" data-bs-toggle="tab">CTA</a>
+            </li>
+            <li class="sidebar-item">
+                <a href="#projects" class="sidebar-link" data-bs-toggle="tab">Proyectos</a>
+            </li>
+            <li class="sidebar-item">
+                <a href="#testimonials" class="sidebar-link" data-bs-toggle="tab">Testimonios</a>
+            </li>
+            <li class="sidebar-item">
+                <a href="#contactForm" class="sidebar-link" data-bs-toggle="tab">Formulario de Contacto</a>
+            </li>
+            <li class="sidebar-item">
+                <a href="#footer" class="sidebar-link" data-bs-toggle="tab">Footer</a>
+            </li>
+            <li class="sidebar-item">
+                <a href="#preview" class="sidebar-link" data-bs-toggle="tab">Vista Previa</a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+        <div class="tab-content">
+            <!-- General Information -->
+            <div class="tab-pane fade show active" id="general">
+                <h2>Información General</h2>
+                <p class="text-muted">Configura la información general de la empresa.</p>
+                
+                <div class="card">
+                    <div class="card-header">Datos Principales</div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="companyName" class="form-label">Nombre de la Empresa</label>
+                            <input type="text" class="form-control" id="companyName" name="companyInfo.name">
+                        </div>
+                        <div class="mb-3">
+                            <label for="companySlogan" class="form-label">Eslogan</label>
+                            <input type="text" class="form-control" id="companySlogan" name="companyInfo.slogan">
+                        </div>
+                        <div class="mb-3">
+                            <label for="companyDescription" class="form-label">Descripción Breve</label>
+                            <textarea class="form-control" id="companyDescription" rows="3" name="companyInfo.description"></textarea>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">Estadísticas</div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="yearFounded" class="form-label">Año de Fundación</label>
+                            <input type="number" class="form-control" id="yearFounded" name="companyInfo.yearFounded">
+                            <div class="form-text">Se usará para calcular automáticamente los años de experiencia.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="yearsExperience" class="form-label">Años de Experiencia (opcional)</label>
+                            <input type="number" class="form-control" id="yearsExperience" name="companyInfo.yearsExperience">
+                            <div class="form-text">Si se deja vacío, se calculará automáticamente desde el año de fundación.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="projectsCompleted" class="form-label">Proyectos Completados</label>
+                            <input type="number" class="form-control" id="projectsCompleted" name="companyInfo.projectsCompleted">
+                        </div>
+                        <div class="mb-3">
+                            <label for="clientsSatisfied" class="form-label">Clientes Satisfechos (%)</label>
+                            <input type="number" class="form-control" id="clientsSatisfied" name="companyInfo.clientsSatisfied" min="0" max="100">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Information -->
+            <div class="tab-pane fade" id="contact">
+                <h2>Información de Contacto</h2>
+                <p class="text-muted">Configura los datos de contacto de la empresa.</p>
+                
+                <div class="card">
+                    <div class="card-header">Datos de Contacto</div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="address" class="form-label">Dirección</label>
+                            <input type="text" class="form-control" id="address" name="contact.address">
+                        </div>
+                        <div class="mb-3">
+                            <label for="phone" class="form-label">Teléfono</label>
+                            <input type="text" class="form-control" id="phone" name="contact.phone">
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="contact.email">
+                        </div>
+                        <div class="mb-3">
+                            <label for="scheduleText" class="form-label">Horario</label>
+                            <input type="text" class="form-control" id="scheduleText" name="contact.scheduleText">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">Redes Sociales</div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="facebook" class="form-label">Facebook</label>
+                            <input type="text" class="form-control" id="facebook" name="contact.socialMedia.facebook">
+                        </div>
+                        <div class="mb-3">
+                            <label for="twitter" class="form-label">Twitter</label>
+                            <input type="text" class="form-control" id="twitter" name="contact.socialMedia.twitter">
+                        </div>
+                        <div class="mb-3">
+                            <label for="instagram" class="form-label">Instagram</label>
+                            <input type="text" class="form-control" id="instagram" name="contact.socialMedia.instagram">
+                        </div>
+                        <div class="mb-3">
+                            <label for="linkedin" class="form-label">LinkedIn</label>
+                            <input type="text" class="form-control" id="linkedin" name="contact.socialMedia.linkedin">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Colors -->
+            <div class="tab-pane fade" id="colors">
+                <h2>Colores</h2>
+                <p class="text-muted">Personaliza los colores de la web.</p>
+                
+                <div class="card">
+                    <div class="card-header">Paleta de Colores</div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="primaryColor" class="form-label">
+                                <span class="color-preview" id="primaryColorPreview"></span>
+                                Color Principal
+                            </label>
+                            <input type="color" class="form-control form-control-color" id="primaryColor" name="colors.primary">
+                            <div class="form-text">Se usa para fondos oscuros, textos y elementos destacados.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="secondaryColor" class="form-label">
+                                <span class="color-preview" id="secondaryColorPreview"></span>
+                                Color Secundario
+                            </label>
+                            <input type="color" class="form-control form-control-color" id="secondaryColor" name="colors.secondary">
+                            <div class="form-text">Se usa para acentos, botones y elementos destacados.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="darkColor" class="form-label">
+                                <span class="color-preview" id="darkColorPreview"></span>
+                                Color Oscuro
+                            </label>
+                            <input type="color" class="form-control form-control-color" id="darkColor" name="colors.dark">
+                            <div class="form-text">Se usa para el footer y algunos fondos oscuros.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="lightColor" class="form-label">
+                                <span class="color-preview" id="lightColorPreview"></span>
+                                Color Claro
+                            </label>
+                            <input type="color" class="form-control form-control-color" id="lightColor" name="colors.light">
+                            <div class="form-text">Se usa para fondos claros alternados.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Other sections would be here -->
+            
+            <!-- Preview -->
+            <div class="tab-pane fade" id="preview">
+                <h2>Vista Previa</h2>
+                <p class="text-muted">Previsualiza cómo se verá tu sitio web con los cambios aplicados.</p>
+                
+                <div class="mb-3">
+                    <button class="btn btn-primary" id="refresh-preview">Actualizar Vista Previa</button>
+                </div>
+                
+                <iframe id="preview-iframe" src="index.html"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load config
+            loadConfig();
+            
+            // Setup event listeners
+            setupEventListeners();
+            
+            // Setup color previews
+            setupColorPreviews();
+        });
+        
+        function loadConfig() {
+            // Load config.js
+            fetch('config.js')
+                .then(response => response.text())
+                .then(text => {
+                    // Extract config object from JavaScript
+                    const configMatch = text.match(/const\s+config\s*=\s*(\{[\s\S]*\});/);
+                    if (configMatch && configMatch[1]) {
+                        try {
+                            const configJson = configMatch[1].replace(/(\w+):/g, '"$1":');
+                            const config = JSON.parse(configJson);
+                            
+                            // Populate form fields
+                            populateFields(config);
+                        } catch (error) {
+                            console.error('Error parsing config:', error);
+                            alert('Error al cargar la configuración. Consulta la consola para más detalles.');
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading config:', error);
+                    alert('Error al cargar la configuración. Consulta la consola para más detalles.');
+                });
+        }
+        
+        function populateFields(config) {
+            // Find all inputs with name attribute
+            const inputs = document.querySelectorAll('[name]');
+            
+            inputs.forEach(input => {
+                // Get the path from the name attribute
+                const path = input.getAttribute('name');
+                
+                // Get the value from the config
+                const value = getNestedValue(config, path);
+                
+                // Set the value to the input
+                if (value !== undefined) {
+                    if (input.type === 'checkbox') {
+                        input.checked = value;
+                    } else {
+                        input.value = value;
+                    }
+                }
+            });
+        }
+        
+        function getNestedValue(obj, path) {
+            const keys = path.split('.');
+            let current = obj;
+            
+            for (const key of keys) {
+                if (current === undefined || current === null) {
+                    return undefined;
+                }
+                
+                current = current[key];
+            }
+            
+            return current;
+        }
+        
+        function setupEventListeners() {
+            // Tab navigation
+            const tabLinks = document.querySelectorAll('.sidebar-link');
+            tabLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Remove active class from all links
+                    tabLinks.forEach(l => l.classList.remove('active'));
+                    
+                    // Add active class to clicked link
+                    this.classList.add('active');
+                    
+                    // Show the corresponding tab pane
+                    const target = this.getAttribute('href');
+                    const tabPane = document.querySelector(target);
+                    
+                    document.querySelectorAll('.tab-pane').forEach(pane => {
+                        pane.classList.remove('show', 'active');
+                    });
+                    
+                    tabPane.classList.add('show', 'active');
+                });
+            });
+            
+            // Toggle sidebar on mobile
+            const toggleSidebar = document.querySelector('.toggle-sidebar');
+            if (toggleSidebar) {
+                toggleSidebar.addEventListener('click', function() {
+                    const sidebar = document.getElementById('sidebar');
+                    sidebar.classList.toggle('show');
+                });
+            }
+            
+            // Save config
+            document.getElementById('save-config').addEventListener('click', saveConfig);
+            
+            // Refresh preview
+            document.getElementById('refresh-preview').addEventListener('click', function() {
+                const iframe = document.getElementById('preview-iframe');
+                iframe.src = iframe.src;
+            });
+        }
+        
+        function setupColorPreviews() {
+            // Preview colors on change
+            const colorInputs = document.querySelectorAll('input[type="color"]');
+            
+            colorInputs.forEach(input => {
+                const previewId = input.id + 'Preview';
+                const preview = document.getElementById(previewId);
+                
+                if (preview) {
+                    // Initial color
+                    preview.style.backgroundColor = input.value;
+                    
+                    // Update on change
+                    input.addEventListener('input', function() {
+                        preview.style.backgroundColor = this.value;
+                    });
+                }
+            });
+        }
+        
+        function saveConfig() {
+            // Get all inputs with name attribute
+            const inputs = document.querySelectorAll('[name]');
+            
+            // Build config object
+            const config = {};
+            
+            inputs.forEach(input => {
+                const path = input.getAttribute('name');
+                const keys = path.split('.');
+                
+                let current = config;
+                
+                // Create nested objects
+                for (let i = 0; i < keys.length - 1; i++) {
+                    const key = keys[i];
+                    
+                    if (!current[key]) {
+                        current[key] = {};
+                    }
+                    
+                    current = current[key];
+                }
+                
+                // Set value
+                const lastKey = keys[keys.length - 1];
+                
+                if (input.type === 'checkbox') {
+                    current[lastKey] = input.checked;
+                } else if (input.type === 'number') {
+                    current[lastKey] = parseFloat(input.value);
+                } else {
+                    current[lastKey] = input.value;
+                }
+            });
+            
+            // Build config.js content
+            const configContent = `/**
+ * ARCHIVO DE CONFIGURACIÓN
+ * -------------------------
+ * Aquí puedes editar fácilmente textos y configuraciones de la web
+ * sin necesidad de tocar HTML ni CSS
+ */
+
+const config = ${JSON.stringify(config, null, 4)};`;
+            
+            // Create download link
+            const blob = new Blob([configContent], { type: 'application/javascript' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'config.js';
+            a.click();
+            
+            // Clean up
+            URL.revokeObjectURL(url);
+            
+            alert('Configuración guardada correctamente. Descarga el archivo y súbelo a tu servidor para aplicar los cambios.');
+        }
+    </script>
+</body>
+</html>

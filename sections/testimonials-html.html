@@ -1,0 +1,69 @@
+<!-- 
+  Testimonials Section 
+  -----------------
+  Esta sección muestra testimonios de clientes satisfechos.
+  Las tarjetas se generan dinámicamente desde la configuración.
+-->
+<section class="section section-bg" id="testimonials">
+    <div class="container">
+        <div class="section-header">
+            <span class="section-subtitle">{{config.sections.testimonials.subtitle}}</span>
+            <h2 class="section-title">{{config.sections.testimonials.title}}</h2>
+            <p class="section-description">{{config.sections.testimonials.description}}</p>
+        </div>
+
+        <div class="testimonial-grid" id="testimonial-grid">
+            <!-- Las tarjetas de testimonios se generan dinámicamente desde JavaScript -->
+        </div>
+    </div>
+</section>
+
+<script>
+    // Generar tarjetas de testimonios desde la configuración
+    document.addEventListener('DOMContentLoaded', function() {
+        // Obtener el contenedor de testimonios
+        const testimonialGrid = document.getElementById('testimonial-grid');
+        if (!testimonialGrid) return;
+        
+        // Obtener los testimonios desde la configuración
+        const testimonials = getConfig('sections.testimonials.items', []);
+        
+        // Crear una tarjeta para cada testimonio
+        if (Array.isArray(testimonials)) {
+            testimonials.forEach((testimonial, index) => {
+                // Crear tarjeta
+                const card = document.createElement('div');
+                card.className = 'testimonial-card slide-up';
+                card.setAttribute('data-aos-delay', (index * 100).toString());
+                
+                // Generar HTML con estrellas
+                const ratingStars = generateRatingStars(testimonial.rating);
+                
+                // Contenido de la tarjeta
+                card.innerHTML = `
+                    <div class="quote-icon">
+                        <i class="fas fa-quote-right"></i>
+                    </div>
+                    <div class="testimonial-text">
+                        ${testimonial.text}
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">
+                            <i class="author-icon fas fa-user"></i>
+                        </div>
+                        <div class="author-info">
+                            <h4>${testimonial.name}</h4>
+                            <span>${testimonial.position}</span>
+                            <div class="rating">
+                                ${ratingStars}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // Añadir al grid
+                testimonialGrid.appendChild(card);
+            });
+        }
+    });
+</script>

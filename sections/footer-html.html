@@ -1,0 +1,124 @@
+<!-- 
+  Footer Section 
+  ------------
+  Pie de página con información de contacto, enlaces rápidos,
+  formulario de boletín y copyright.
+-->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-container">
+            <div class="footer-widget footer-about">
+                <a href="#" class="logo">
+                    {{config.companyInfo.name}} <span>Constructora</span>
+                </a>
+                <p>{{config.sections.footer.aboutText}}</p>
+                <div class="footer-contact-item">
+                    <div class="footer-contact-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <p>{{config.contact.address}}</p>
+                </div>
+                <div class="footer-contact-item">
+                    <div class="footer-contact-icon">
+                        <i class="fas fa-phone-alt"></i>
+                    </div>
+                    <p>{{config.contact.phone}}</p>
+                </div>
+                <div class="footer-contact-item">
+                    <div class="footer-contact-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <p>{{config.contact.email}}</p>
+                </div>
+            </div>
+            
+            <div class="footer-widget footer-links">
+                <h3>{{config.sections.footer.quickLinks.title}}</h3>
+                <ul class="footer-links-list" id="footer-quick-links">
+                    <!-- Se generan dinámicamente desde JavaScript -->
+                </ul>
+            </div>
+            
+            <div class="footer-widget footer-links">
+                <h3>{{config.sections.footer.services.title}}</h3>
+                <ul class="footer-links-list" id="footer-services-links">
+                    <!-- Se generan dinámicamente desde JavaScript -->
+                </ul>
+            </div>
+            
+            <div class="footer-widget footer-newsletter">
+                <h3>{{config.sections.footer.newsletter.title}}</h3>
+                <p>{{config.sections.footer.newsletter.text}}</p>
+                <form class="newsletter-form">
+                    <input type="email" class="newsletter-input" placeholder="{{config.sections.footer.newsletter.placeholder}}" required>
+                    <button type="submit" class="newsletter-btn"><i class="fas fa-paper-plane"></i></button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p class="copyright" id="copyright">
+                <!-- Se genera dinámicamente desde JavaScript -->
+            </p>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // Generar enlaces y copyright desde la configuración
+    document.addEventListener('DOMContentLoaded', function() {
+        // Generar enlaces rápidos
+        const quickLinksContainer = document.getElementById('footer-quick-links');
+        if (quickLinksContainer) {
+            const quickLinks = getConfig('sections.footer.quickLinks.links', []);
+            
+            if (Array.isArray(quickLinks)) {
+                quickLinks.forEach(link => {
+                    const li = document.createElement('li');
+                    li.className = 'footer-links-item';
+                    
+                    li.innerHTML = `
+                        <a href="${link.url}" class="footer-link">
+                            <i class="fas fa-chevron-right"></i> ${link.name}
+                        </a>
+                    `;
+                    
+                    quickLinksContainer.appendChild(li);
+                });
+            }
+        }
+        
+        // Generar enlaces de servicios
+        const servicesLinksContainer = document.getElementById('footer-services-links');
+        if (servicesLinksContainer) {
+            const serviceLinks = getConfig('sections.footer.services.links', []);
+            
+            if (Array.isArray(serviceLinks)) {
+                serviceLinks.forEach(link => {
+                    const li = document.createElement('li');
+                    li.className = 'footer-links-item';
+                    
+                    li.innerHTML = `
+                        <a href="${link.url}" class="footer-link">
+                            <i class="fas fa-chevron-right"></i> ${link.name}
+                        </a>
+                    `;
+                    
+                    servicesLinksContainer.appendChild(li);
+                });
+            }
+        }
+        
+        // Generar copyright
+        const copyrightContainer = document.getElementById('copyright');
+        if (copyrightContainer) {
+            const copyrightText = getConfig('sections.footer.copyright.text', '');
+            const currentYear = new Date().getFullYear();
+            
+            // Reemplazar marcador de año si existe
+            const processedText = copyrightText.replace(/\{year\}/g, currentYear);
+            
+            copyrightContainer.innerHTML = processedText;
+        }
+    });
+</script>
