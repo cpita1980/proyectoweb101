@@ -8,7 +8,7 @@
 const config = {
     // Información general de la empresa
     companyInfo: {
-        name: "Naga Constructora",
+        name: "Naga",
         slogan: "Construimos el futuro que imaginas",
         description: "Transformamos espacios y proyectos en realidades extraordinarias con soluciones innovadoras y compromiso con la calidad.",
         yearFounded: 2010,
