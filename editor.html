@@ -3,731 +3,456 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editor de Configuración - Naga Constructora</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <title>Editor - Naga Constructora</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --primary: #0A0A0A;
             --secondary: #F7B500;
-            --dark: #0D1B2A;
-            --light: #F8F9FA;
         }
-        
-        body {
-            background-color: #f8f9fa;
-            padding-top: 56px;
-        }
-        
-        .navbar {
-            background-color: var(--primary);
-        }
-        
-        .navbar-brand {
-            color: white;
-            font-weight: bold;
-        }
-        
-        .navbar-brand span {
-            color: var(--secondary);
-        }
-        
-        .sidebar {
-            position: fixed;
-            top: 56px;
-            left: 0;
-            height: calc(100vh - 56px);
-            width: 250px;
-            background-color: white;
-            border-right: 1px solid #dee2e6;
-            overflow-y: auto;
-            z-index: 1;
-            padding: 1rem 0;
-            transition: transform 0.3s ease;
-        }
-        
-        .sidebar-menu {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        
-        .sidebar-item {
-            padding: 0.5rem 1rem;
-        }
-        
-        .sidebar-link {
-            display: block;
-            padding: 0.5rem 1rem;
-            color: var(--dark);
-            text-decoration: none;
-            border-radius: 0.25rem;
-            transition: all 0.2s;
-        }
-        
-        .sidebar-link:hover {
-            background-color: #f8f9fa;
-            color: var(--secondary);
-        }
-        
-        .sidebar-link.active {
-            background-color: var(--secondary);
-            color: var(--dark);
-            font-weight: bold;
-        }
-        
-        .sidebar-link i {
-            margin-right: 10px;
-            width: 20px;
-            text-align: center;
-        }
-        
-        .content {
-            margin-left: 250px;
-            padding: 2rem;
-            transition: margin-left 0.3s ease;
-        }
-        
-        .card {
-            margin-bottom: 2rem;
-            border: none;
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.05);
-        }
-        
-        .card-header {
-            background-color: var(--primary);
-            color: white;
-            font-weight: bold;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .btn-primary {
-            background-color: var(--secondary);
-            border-color: var(--secondary);
-            color: var(--dark);
-        }
-        
-        .btn-primary:hover {
-            background-color: #e6a800;
-            border-color: #e6a800;
-            color: var(--dark);
-        }
-        
-        .form-label {
-            font-weight: bold;
-        }
-        
-        .form-text {
-            color: #6c757d;
-        }
-        
-        .color-preview {
-            display: inline-block;
-            width: 24px;
-            height: 24px;
+        .navbar { background-color: var(--primary); }
+        .navbar-brand span { color: var(--secondary); }
+        .tab-menu { background-color: #f8f9fa; border-right: 1px solid #dee2e6; }
+        .color-item {
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
-            margin-right: 10px;
-            border: 1px solid #dee2e6;
-            vertical-align: middle;
-        }
-        
-        #preview-iframe {
-            width: 100%;
-            height: 500px;
-            border: 1px solid #dee2e6;
-            border-radius: 0.25rem;
-        }
-        
-        /* Nuevos estilos */
-        .sortable-list {
-            padding: 0;
-            list-style: none;
-        }
-        
-        .sortable-item {
-            padding: 1rem;
-            background-color: white;
-            border-radius: 0.25rem;
-            margin-bottom: 1rem;
-            border: 1px solid #dee2e6;
-            cursor: move;
-            position: relative;
-        }
-        
-        .sortable-item .item-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-        
-        .sortable-item .item-title {
-            font-weight: bold;
-            margin: 0;
-        }
-        
-        .sortable-item-controls {
-            display: flex;
-            gap: 0.5rem;
-        }
-        
-        .sortable-item-content {
-            display: none;
-        }
-        
-        .sortable-item-content.show {
-            display: block;
-        }
-        
-        .dark-mode {
-            background-color: #121212;
-            color: #e0e0e0;
-        }
-        
-        .dark-mode .card {
-            background-color: #1e1e1e;
-            color: #e0e0e0;
-        }
-        
-        .dark-mode .sidebar {
-            background-color: #1e1e1e;
-            border-right-color: #333;
-        }
-        
-        .dark-mode .sidebar-link {
-            color: #e0e0e0;
-        }
-        
-        .dark-mode .sidebar-link:hover {
-            background-color: #333;
-        }
-        
-        .dark-mode .form-control {
-            background-color: #333;
-            border-color: #444;
-            color: #e0e0e0;
-        }
-        
-        .dark-mode .form-text {
-            color: #aaa;
-        }
-        
-        .dark-mode .sortable-item {
-            background-color: #1e1e1e;
-            border-color: #333;
-        }
-        
-        .unsaved-changes {
-            background-color: #ffc107;
-            color: #212529;
-            padding: 0.25rem 0.5rem;
-            border-radius: 0.25rem;
-            font-weight: bold;
-            font-size: 0.8rem;
-            margin-left: 1rem;
-            display: none;
-        }
-        
-        .media-preview {
-            max-width: 150px;
-            max-height: 150px;
-            border-radius: 0.25rem;
-            margin-top: 0.5rem;
-            display: block;
-        }
-        
-        .file-upload-wrapper {
-            position: relative;
-            margin-bottom: 1rem;
-        }
-        
-        .file-upload-wrapper input[type="file"] {
-            opacity: 0;
-            position: absolute;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            cursor: pointer;
-        }
-        
-        .file-upload-wrapper .file-upload-button {
             display: inline-block;
-            padding: 0.375rem 0.75rem;
-            font-weight: 400;
-            text-align: center;
-            white-space: nowrap;
-            vertical-align: middle;
-            user-select: none;
-            border: 1px solid transparent;
-            border-radius: 0.25rem;
-            transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-            background-color: var(--secondary);
-            color: var(--dark);
-        }
-        
-        .file-upload-wrapper .file-upload-info {
-            margin-left: 0.5rem;
-            display: inline-block;
-        }
-        
-        .history-list {
-            list-style: none;
-            padding: 0;
-        }
-        
-        .history-item {
-            padding: 0.5rem;
-            border-bottom: 1px solid #dee2e6;
-            cursor: pointer;
-        }
-        
-        .history-item:hover {
-            background-color: #f8f9fa;
-        }
-        
-        .dark-mode .history-item:hover {
-            background-color: #333;
-        }
-        
-        .toast-container {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 9999;
-        }
-        
-        .login-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: calc(100vh - 56px);
-        }
-        
-        .login-card {
-            width: 100%;
-            max-width: 400px;
-        }
-        
-        .color-palette-preview {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 1rem;
-        }
-        
-        .color-palette-preview .color-item {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
+            margin-right: 5px;
             border: 1px solid #dee2e6;
         }
-        
-        .color-palette-option {
-            margin-bottom: 1rem;
-            padding: 1rem;
+        .palette-option {
+            padding: 10px;
             border: 1px solid #dee2e6;
-            border-radius: 0.25rem;
+            margin-bottom: 10px;
             cursor: pointer;
-            transition: all 0.2s;
-            position: relative;
+            border-radius: 5px;
         }
-        
-        .color-palette-option:hover,
-        .color-palette-option.active {
+        .palette-option.active {
             border-color: var(--secondary);
             box-shadow: 0 0 0 0.2rem rgba(247, 181, 0, 0.25);
         }
-        
-        .color-palette-option.active::after {
-            content: "✓";
-            font-weight: bold;
-            color: var(--secondary);
-            position: absolute;
-            top: 10px;
-            right: 20px;
-            font-size: 1.5rem;
-        }
-        
-        .image-gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-        
-        .image-item {
-            position: relative;
-            border: 1px solid #dee2e6;
-            border-radius: 0.25rem;
-            overflow: hidden;
-            cursor: pointer;
-        }
-        
-        .image-item img {
-            width: 100%;
-            height: 150px;
-            object-fit: cover;
-            display: block;
-        }
-        
-        .image-item-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            transition: opacity 0.2s;
-        }
-        
-        .image-item:hover .image-item-overlay {
-            opacity: 1;
-        }
-        
-        .image-item-overlay .btn {
-            margin: 0 0.25rem;
-            padding: 0.25rem 0.5rem;
-            font-size: 0.8rem;
-        }
-        
-        @media (max-width: 992px) {
-            .sidebar {
-                transform: translateX(-100%);
-            }
-            
-            .sidebar.show {
-                transform: translateX(0);
-            }
-            
-            .content {
-                margin-left: 0;
-            }
-            
-            .toggle-sidebar {
-                display: block;
-            }
+        .img-preview {
+            max-width: 120px;
+            max-height: 120px;
+            border-radius: 5px;
         }
     </style>
 </head>
 <body>
-    <!-- Login Screen -->
-    <div id="login-screen" class="container-fluid">
-        <div class="login-container">
-            <div class="card login-card">
-                <div class="card-header">
-                    <h4 class="m-0">Acceso al Editor</h4>
-                </div>
-                <div class="card-body">
-                    <form id="login-form">
-                        <div class="mb-3">
-                            <label for="username" class="form-label">Usuario</label>
-                            <input type="text" class="form-control" id="username" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Contraseña</label>
-                            <input type="password" class="form-control" id="password" required>
-                        </div>
-                        <div class="mb-3 form-check">
-                            <input type="checkbox" class="form-check-input" id="remember-me">
-                            <label class="form-check-label" for="remember-me">Recordarme</label>
-                        </div>
-                        <div id="login-error" class="alert alert-danger" style="display: none;"></div>
-                        <button type="submit" class="btn btn-primary w-100">Iniciar Sesión</button>
-                    </form>
+    <!-- Login -->
+    <div id="login-screen" class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header bg-dark text-white">
+                        <h4 class="m-0">Acceso al Editor</h4>
+                    </div>
+                    <div class="card-body">
+                        <form id="login-form">
+                            <div class="mb-3">
+                                <label class="form-label">Usuario</label>
+                                <input type="text" class="form-control" id="username" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Contraseña</label>
+                                <input type="password" class="form-control" id="password" required>
+                            </div>
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" id="remember-me">
+                                <label class="form-check-label" for="remember-me">Recordarme</label>
+                            </div>
+                            <div id="login-error" class="alert alert-danger" style="display: none;"></div>
+                            <button type="submit" class="btn btn-primary w-100">Iniciar Sesión</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Editor Principal (Oculto inicialmente) -->
+    <!-- Editor (Oculto inicialmente) -->
     <div id="editor-main" style="display: none;">
         <!-- Navbar -->
-        <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <nav class="navbar navbar-dark">
             <div class="container-fluid">
-                <a class="navbar-brand" href="#">Naga <span>Constructora</span> - Editor</a>
-                <button class="navbar-toggler toggle-sidebar" type="button">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse">
-                    <ul class="navbar-nav ms-auto">
-                        <li class="nav-item">
-                            <span class="unsaved-changes" id="unsaved-indicator">Cambios sin guardar</span>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="index.html" target="_blank">Ver Sitio</a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="themesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="fas fa-paint-brush"></i> Temas
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="themesDropdown">
-                                <li><a class="dropdown-item" href="#" id="light-theme">Tema Claro</a></li>
-                                <li><a class="dropdown-item" href="#" id="dark-theme">Tema Oscuro</a></li>
-                            </ul>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="configDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="fas fa-cogs"></i> Configuración
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="configDropdown">
-                                <li><a class="dropdown-item" href="#" id="save-config"><i class="fas fa-save"></i> Guardar Cambios</a></li>
-                                <li><a class="dropdown-item" href="#" id="import-config"><i class="fas fa-upload"></i> Importar Configuración</a></li>
-                                <li><a class="dropdown-item" href="#" id="export-config"><i class="fas fa-download"></i> Exportar Configuración</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="#" id="show-history"><i class="fas fa-history"></i> Historial de Cambios</a></li>
-                                <li><a class="dropdown-item" href="#" id="reset-config"><i class="fas fa-trash-alt"></i> Restablecer Valores</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="#" id="logout-button"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
-                            </ul>
-                        </li>
-                    </ul>
+                <a class="navbar-brand" href="#">Naga <span>Constructora</span></a>
+                <div>
+                    <a href="index.html" target="_blank" class="btn btn-sm btn-outline-light me-2">Ver Sitio</a>
+                    <button class="btn btn-sm btn-success me-2" id="save-config">Guardar</button>
+                    <button class="btn btn-sm btn-danger" id="logout-button">Cerrar Sesión</button>
                 </div>
             </div>
         </nav>
 
-        <!-- Sidebar -->
-        <div class="sidebar" id="sidebar">
-            <ul class="sidebar-menu">
-                <li class="sidebar-item">
-                    <a href="#general" class="sidebar-link active" data-bs-toggle="tab">
-                        <i class="fas fa-info-circle"></i> Información General
-                    </a>
-                </li>
-                <li class="sidebar-item">
-                    <a href="#contact" class="sidebar-link" data-bs-toggle="tab">
-                        <i class="fas fa-address-book"></i> Contacto
-                    </a>
-                </li>
-                <li class="sidebar-item">
-                    <a href="#colors" class="sidebar-link" data-bs-toggle="tab">
-                        <i class="fas fa-palette"></i> Colores
-                    </a>
-                </li>
-                <li class="sidebar-item">
-                    <a href="#media" class="sidebar-link" data-bs-toggle="tab">
-                        <i class="fas fa-images"></i> Imágenes
-                    </a>
-                </li>
-                <li class="sidebar-item">
-                    <a href="#hero" class="sidebar-link" data-bs-toggle="tab">
-                        <i class="fas fa-image"></i> Hero
-                    </a>
-                </li>
-                <li class="sidebar-item">
-                    <a href="#about" class="sidebar-link" data-bs-toggle="tab">
-                        <i class="fas fa-building"></i> Nosotros
-                    </a>
-                </li>
-                <li class="sidebar-item">
-                    <a href="#services" class="sidebar-link" data-bs-toggle="tab">
-                        <i class="fas fa-tools"></i> Servicios
-                    </a>
-                </li>
-                <li class="sidebar-item">
-                    <a href="#cta" class="sidebar-link" data-bs-toggle="tab">
-                        <i class="fas fa-bullhorn"></i> CTA
-                    </a>
-                </li>
-                <li class="sidebar-item">
-                    <a href="#projects" class="sidebar-link" data-bs-toggle="tab">
-                        <i class="fas fa-hard-hat"></i> Proyectos
-                    </a>
-                </li>
-                <li class="sidebar-item">
-                    <a href="#testimonials" class="sidebar-link" data-bs-toggle="tab">
-                        <i class="fas fa-comment-dots"></i> Testimonios
-                    </a>
-                </li>
-                <li class="sidebar-item">
-                    <a href="#contactForm" class="sidebar-link" data-bs-toggle="tab">
-                        <i class="fas fa-envelope"></i> Formulario de Contacto
-                    </a>
-                </li>
-                <li class="sidebar-item">
-                    <a href="#footer" class="sidebar-link" data-bs-toggle="tab">
-                        <i class="fas fa-shoe-prints"></i> Footer
-                    </a>
-                </li>
-                <li class="sidebar-item">
-                    <a href="#seo" class="sidebar-link" data-bs-toggle="tab">
-                        <i class="fas fa-search"></i> SEO
-                    </a>
-                </li>
-                <li class="sidebar-item">
-                    <a href="#analytics" class="sidebar-link" data-bs-toggle="tab">
-                        <i class="fas fa-chart-line"></i> Analytics
-                    </a>
-                </li>
-                <li class="sidebar-item">
-                    <a href="#preview" class="sidebar-link" data-bs-toggle="tab">
-                        <i class="fas fa-eye"></i> Vista Previa
-                    </a>
-                </li>
-            </ul>
-        </div>
-
-        <!-- Content -->
-        <div class="content">
-            <div class="tab-content">
-                <!-- General Information -->
-                <div class="tab-pane fade show active" id="general">
-                    <h2>Información General</h2>
-                    <p class="text-muted">Configura la información general de la empresa.</p>
-                    
-                    <div class="card">
-                        <div class="card-header">
-                            <span>Datos Principales</span>
-                            <button class="btn btn-sm btn-outline-light" type="button" data-bs-toggle="collapse" data-bs-target="#datosGeneralesCollapse" aria-expanded="true">
-                                <i class="fas fa-chevron-down"></i>
-                            </button>
-                        </div>
-                        <div class="card-body collapse show" id="datosGeneralesCollapse">
-                            <div class="mb-3">
-                                <label for="companyName" class="form-label">Nombre de la Empresa</label>
-                                <input type="text" class="form-control" id="companyName" name="companyInfo.name">
-                            </div>
-                            <div class="mb-3">
-                                <label for="companySlogan" class="form-label">Eslogan</label>
-                                <input type="text" class="form-control" id="companySlogan" name="companyInfo.slogan">
-                            </div>
-                            <div class="mb-3">
-                                <label for="companyDescription" class="form-label">Descripción Breve</label>
-                                <textarea class="form-control" id="companyDescription" rows="3" name="companyInfo.description"></textarea>
-                                <div class="form-text">Esta descripción se utilizará en la sección principal y en metadatos para SEO.</div>
-                            </div>
-                            <div class="mb-3">
-                                <label for="logoUpload" class="form-label">Logo de la Empresa</label>
-                                <div class="file-upload-wrapper">
-                                    <div class="file-upload-button">Seleccionar Imagen</div>
-                                    <span class="file-upload-info">Ningún archivo seleccionado</span>
-                                    <input type="file" id="logoUpload" accept="image/*">
-                                </div>
-                                <input type="hidden" name="companyInfo.logo" id="logoPath">
-                                <img id="logoPreview" class="media-preview" style="display: none;">
-                                <div class="form-text">Formatos recomendados: SVG, PNG con fondo transparente. Tamaño máximo: 500KB.</div>
-                            </div>
-                            <div class="mb-3">
-                                <label for="faviconUpload" class="form-label">Favicon</label>
-                                <div class="file-upload-wrapper">
-                                    <div class="file-upload-button">Seleccionar Imagen</div>
-                                    <span class="file-upload-info">Ningún archivo seleccionado</span>
-                                    <input type="file" id="faviconUpload" accept="image/png, image/x-icon, image/svg+xml">
-                                </div>
-                                <input type="hidden" name="companyInfo.favicon" id="faviconPath">
-                                <img id="faviconPreview" class="media-preview" style="max-width: 64px; max-height: 64px; display: none;">
-                                <div class="form-text">Formatos recomendados: ICO, PNG o SVG. Tamaño ideal: 32x32px o 64x64px.</div>
-                            </div>
-                        </div>
+        <div class="container-fluid">
+            <div class="row">
+                <!-- Tabs -->
+                <div class="col-md-2 tab-menu p-3">
+                    <div class="nav flex-column nav-pills" role="tablist">
+                        <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#general">General</button>
+                        <button class="nav-link" data-bs-toggle="pill" data-bs-target="#colors">Colores</button>
+                        <button class="nav-link" data-bs-toggle="pill" data-bs-target="#images">Imágenes</button>
                     </div>
-                    
-                    <div class="card">
-                        <div class="card-header">
-                            <span>Estadísticas</span>
-                            <button class="btn btn-sm btn-outline-light" type="button" data-bs-toggle="collapse" data-bs-target="#estadisticasCollapse" aria-expanded="true">
-                                <i class="fas fa-chevron-down"></i>
-                            </button>
-                        </div>
-                        <div class="card-body collapse show" id="estadisticasCollapse">
-                            <div class="mb-3">
-                                <label for="yearFounded" class="form-label">Año de Fundación</label>
-                                <input type="number" class="form-control" id="yearFounded" name="companyInfo.yearFounded">
-                                <div class="form-text">Se usará para calcular automáticamente los años de experiencia.</div>
-                            </div>
-                            <div class="mb-3">
-                                <label for="yearsExperience" class="form-label">Años de Experiencia (opcional)</label>
-                                <input type="number" class="form-control" id="yearsExperience" name="companyInfo.yearsExperience">
-                                <div class="form-text">Si se deja vacío, se calculará automáticamente desde el año de fundación.</div>
-                            </div>
-                            <div class="mb-3">
-                                <label for="projectsCompleted" class="form-label">Proyectos Completados</label>
-                                <input type="number" class="form-control" id="projectsCompleted" name="companyInfo.projectsCompleted">
-                            </div>
-                            <div class="mb-3">
-                                <label for="clientsSatisfied" class="form-label">Clientes Satisfechos (%)</label>
-                                <input type="number" class="form-control" id="clientsSatisfied" name="companyInfo.clientsSatisfied" min="0" max="100">
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="squareMetersBuilt" class="form-label">Metros Cuadrados Construidos</label>
-                                    <input type="number" class="form-control" id="squareMetersBuilt" name="companyInfo.squareMetersBuilt">
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="employeesCount" class="form-label">Número de Empleados</label>
-                                    <input type="number" class="form-control" id="employeesCount" name="companyInfo.employeesCount">
+                </div>
+                
+                <!-- Content -->
+                <div class="col-md-10 p-3">
+                    <div class="tab-content">
+                        <!-- General -->
+                        <div class="tab-pane fade show active" id="general">
+                            <h3>Información General</h3>
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <label class="form-label">Nombre de la Empresa</label>
+                                        <input type="text" class="form-control" name="companyInfo.name">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Eslogan</label>
+                                        <input type="text" class="form-control" name="companyInfo.slogan">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Descripción</label>
+                                        <textarea class="form-control" rows="3" name="companyInfo.description"></textarea>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    
-                    <div class="card">
-                        <div class="card-header">
-                            <span>Acreditaciones y Certificaciones</span>
-                            <button class="btn btn-sm btn-outline-light" type="button" data-bs-toggle="collapse" data-bs-target="#certificacionesCollapse" aria-expanded="true">
-                                <i class="fas fa-chevron-down"></i>
-                            </button>
-                        </div>
-                        <div class="card-body collapse show" id="certificacionesCollapse">
-                            <div class="mb-3">
-                                <label class="form-label">Certificaciones</label>
-                                <div class="sortable-list" id="certifications-list">
-                                    <!-- Los items se agregarán dinámicamente -->
+                            
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <label class="form-label">Año de Fundación</label>
+                                        <input type="number" class="form-control" name="companyInfo.yearFounded">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Proyectos Completados</label>
+                                        <input type="number" class="form-control" name="companyInfo.projectsCompleted">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Clientes Satisfechos (%)</label>
+                                        <input type="number" class="form-control" name="companyInfo.clientsSatisfied">
+                                    </div>
                                 </div>
-                                <button type="button" class="btn btn-primary" id="add-certification">
-                                    <i class="fas fa-plus"></i> Agregar Certificación
-                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Colors -->
+                        <div class="tab-pane fade" id="colors">
+                            <h3>Paletas de Colores</h3>
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <h5>Paletas Predefinidas</h5>
+                                    <div class="row">
+                                        <!-- Paleta 1: Original -->
+                                        <div class="col-md-4">
+                                            <div class="palette-option active" data-palette="original">
+                                                <h6>Original (Negro y Amarillo)</h6>
+                                                <div class="color-item" style="background-color: #0A0A0A;"></div>
+                                                <div class="color-item" style="background-color: #F7B500;"></div>
+                                                <div class="color-item" style="background-color: #0D1B2A;"></div>
+                                                <div class="color-item" style="background-color: #F8F9FA;"></div>
+                                                <button class="btn btn-sm btn-primary w-100 mt-2 apply-palette">Aplicar</button>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Paleta 2: Azul -->
+                                        <div class="col-md-4">
+                                            <div class="palette-option" data-palette="azul">
+                                                <h6>Azul Corporativo</h6>
+                                                <div class="color-item" style="background-color: #0D324D;"></div>
+                                                <div class="color-item" style="background-color: #1C6EA4;"></div>
+                                                <div class="color-item" style="background-color: #002642;"></div>
+                                                <div class="color-item" style="background-color: #F8F9FA;"></div>
+                                                <button class="btn btn-sm btn-primary w-100 mt-2 apply-palette">Aplicar</button>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Paleta 3: Verde -->
+                                        <div class="col-md-4">
+                                            <div class="palette-option" data-palette="verde">
+                                                <h6>Verde Natura</h6>
+                                                <div class="color-item" style="background-color: #1A472A;"></div>
+                                                <div class="color-item" style="background-color: #5D9C59;"></div>
+                                                <div class="color-item" style="background-color: #0F371F;"></div>
+                                                <div class="color-item" style="background-color: #F0F7EE;"></div>
+                                                <button class="btn btn-sm btn-primary w-100 mt-2 apply-palette">Aplicar</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5>Colores Personalizados</h5>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label class="form-label">Principal</label>
+                                            <input type="color" class="form-control form-control-color w-100" name="colors.primary" id="primaryColor">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label">Secundario</label>
+                                            <input type="color" class="form-control form-control-color w-100" name="colors.secondary" id="secondaryColor">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label">Oscuro</label>
+                                            <input type="color" class="form-control form-control-color w-100" name="colors.dark" id="darkColor">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label">Claro</label>
+                                            <input type="color" class="form-control form-control-color w-100" name="colors.light" id="lightColor">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Images -->
+                        <div class="tab-pane fade" id="images">
+                            <h3>Gestión de Imágenes</h3>
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <h5>Subir Imagen</h5>
+                                    <div class="mb-3">
+                                        <label class="form-label">Seleccionar Imagen</label>
+                                        <input type="file" class="form-control" id="imageUpload" accept="image/*">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Título de la Imagen</label>
+                                        <input type="text" class="form-control" id="imageTitle">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Sección</label>
+                                        <select class="form-select" id="imageSection">
+                                            <option value="hero">Hero/Banner</option>
+                                            <option value="projects">Proyectos</option>
+                                            <option value="services">Servicios</option>
+                                            <option value="other">Otros</option>
+                                        </select>
+                                    </div>
+                                    <button class="btn btn-primary" id="uploadImage">Subir Imagen</button>
+                                </div>
+                            </div>
+                            
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5>Imágenes Disponibles</h5>
+                                    <div class="row" id="imageGallery">
+                                        <!-- Ejemplo de imagen -->
+                                        <div class="col-md-2 mb-3">
+                                            <div class="border p-2 text-center">
+                                                <img src="assets/img/placeholder.jpg" class="img-fluid img-preview mb-2">
+                                                <p class="small mb-1">Logo.png</p>
+                                                <button class="btn btn-sm btn-outline-primary w-100">Usar</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
 
-                <!-- Contact Information -->
-                <div class="tab-pane fade" id="contact">
-                    <h2>Información de Contacto</h2>
-                    <p class="text-muted">Configura los datos de contacto de la empresa.</p>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Credenciales (en producción esto debería gestionarse en el backend)
+        const validCredentials = {
+            admin: 'naga2025'
+        };
+        
+        // Paletas de colores
+        const colorPalettes = {
+            original: {
+                primary: '#0A0A0A',
+                secondary: '#F7B500',
+                dark: '#0D1B2A',
+                light: '#F8F9FA'
+            },
+            azul: {
+                primary: '#0D324D',
+                secondary: '#1C6EA4',
+                dark: '#002642',
+                light: '#F8F9FA'
+            },
+            verde: {
+                primary: '#1A472A',
+                secondary: '#5D9C59',
+                dark: '#0F371F',
+                light: '#F0F7EE'
+            }
+        };
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Autenticación
+            const loginForm = document.getElementById('login-form');
+            const loginError = document.getElementById('login-error');
+            
+            // Verificar sesión guardada
+            if (localStorage.getItem('editor_user')) {
+                showEditor();
+            }
+            
+            // Login
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+                const rememberMe = document.getElementById('remember-me').checked;
+                
+                if (validCredentials[username] === password) {
+                    if (rememberMe) {
+                        localStorage.setItem('editor_user', username);
+                    }
+                    showEditor();
+                } else {
+                    loginError.textContent = 'Usuario o contraseña incorrectos';
+                    loginError.style.display = 'block';
+                }
+            });
+            
+            // Logout
+            document.getElementById('logout-button').addEventListener('click', function() {
+                localStorage.removeItem('editor_user');
+                document.getElementById('editor-main').style.display = 'none';
+                document.getElementById('login-screen').style.display = 'block';
+                loginForm.reset();
+                loginError.style.display = 'none';
+            });
+            
+            // Aplicar paletas de colores
+            document.querySelectorAll('.apply-palette').forEach(button => {
+                button.addEventListener('click', function() {
+                    const palette = this.closest('.palette-option').getAttribute('data-palette');
+                    const colors = colorPalettes[palette];
                     
-                    <div class="card">
-                        <div class="card-header">
-                            <span>Datos de Contacto</span>
-                            <button class="btn btn-sm btn-outline-light" type="button" data-bs-toggle="collapse" data-bs-target="#datosContactoCollapse" aria-expanded="true">
-                                <i class="fas fa-chevron-down"></i>
-                            </button>
-                        </div>
-                        <div class="card-body collapse show" id="datosContactoCollapse">
-                            <div class="mb-3">
-                                <label for="address" class="form-label">Dirección</label>
-                                <input type="text" class="form-control" id="address" name="contact.address">
+                    document.getElementById('primaryColor').value = colors.primary;
+                    document.getElementById('secondaryColor').value = colors.secondary;
+                    document.getElementById('darkColor').value = colors.dark;
+                    document.getElementById('lightColor').value = colors.light;
+                    
+                    // Marcar como activa
+                    document.querySelectorAll('.palette-option').forEach(option => {
+                        option.classList.remove('active');
+                    });
+                    this.closest('.palette-option').classList.add('active');
+                });
+            });
+            
+            // Cargar configuración
+            function loadConfig() {
+                fetch('config.js')
+                    .then(response => response.text())
+                    .then(text => {
+                        const configMatch = text.match(/const\s+config\s*=\s*(\{[\s\S]*\});/);
+                        if (configMatch && configMatch[1]) {
+                            try {
+                                const configJson = configMatch[1].replace(/(\w+):/g, '"$1":');
+                                const config = JSON.parse(configJson);
+                                
+                                // Rellenar campos
+                                document.querySelectorAll('[name]').forEach(input => {
+                                    const path = input.getAttribute('name').split('.');
+                                    let value = config;
+                                    
+                                    for (const key of path) {
+                                        if (value !== undefined) {
+                                            value = value[key];
+                                        }
+                                    }
+                                    
+                                    if (value !== undefined) {
+                                        input.value = value;
+                                    }
+                                });
+                            } catch (error) {
+                                console.error('Error al procesar config.js:', error);
+                            }
+                        }
+                    })
+                    .catch(error => console.error('Error al cargar config.js:', error));
+            }
+            
+            // Guardar configuración
+            document.getElementById('save-config').addEventListener('click', function() {
+                const config = {};
+                
+                document.querySelectorAll('[name]').forEach(input => {
+                    const path = input.getAttribute('name').split('.');
+                    let current = config;
+                    
+                    for (let i = 0; i < path.length - 1; i++) {
+                        if (!current[path[i]]) {
+                            current[path[i]] = {};
+                        }
+                        current = current[path[i]];
+                    }
+                    
+                    const value = input.type === 'number' ? parseFloat(input.value) : input.value;
+                    current[path[path.length - 1]] = value;
+                });
+                
+                const configContent = `const config = ${JSON.stringify(config, null, 2)};`;
+                const blob = new Blob([configContent], { type: 'application/javascript' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'config.js';
+                a.click();
+                URL.revokeObjectURL(url);
+                
+                alert('Configuración guardada. Descarga el archivo y súbelo a tu servidor.');
+            });
+            
+            // Mostrar editor
+            function showEditor() {
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('editor-main').style.display = 'block';
+                loadConfig();
+            }
+            
+            // Cargar imágenes
+            document.getElementById('uploadImage').addEventListener('click', function() {
+                const fileInput = document.getElementById('imageUpload');
+                if (fileInput.files.length > 0) {
+                    const file = fileInput.files[0];
+                    const title = document.getElementById('imageTitle').value || file.name;
+                    const section = document.getElementById('imageSection').value;
+                    
+                    // En un entorno real, aquí se subiría la imagen al servidor
+                    // Esta es una simulación para mostrar la funcionalidad
+                    
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const gallery = document.getElementById('imageGallery');
+                        
+                        const imageDiv = document.createElement('div');
+                        imageDiv.className = 'col-md-2 mb-3';
+                        imageDiv.innerHTML = `
+                            <div class="border p-2 text-center">
+                                <img src="${e.target.result}" class="img-fluid img-preview mb-2">
+                                <p class="small mb-1">${title}</p>
+                                <div class="small text-muted mb-2">${section}</div>
+                                <button class="btn btn-sm btn-outline-primary w-100">Usar</button>
                             </div>
-                            <div class="mb-3">
-                                <label for="mapLocation" class="form-label">Ubicación en Google Maps</label>
-                                <div class="input-group">
-                                    <input type="text" class="form-control" id="mapLocation" name="contact.mapLocation" placeholder="Pega aquí el código de iframe de Google Maps">
-                                    <button class="btn btn-outline-secondary" type="button" id="test-map">Probar</button>
-                                </div>
-                                <div class="form-text">Ingresa el código iframe completo obtenido desde Google Maps.</div>
-                                <div id="map-preview" class="mt-2" style="height: 200px; display: none;"></div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="phone" class="form-label">Teléfono</label>
-                                    <input type="text" class="form-control" id="phone" name="contact.phone">
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="whatsapp" class="form-label">WhatsApp</label>
-                                    <input type="text" class="form-control" id="whatsapp" name="contact.whatsapp">
-                                    <div class="form-text">Incluye el código de país (Ej: 52 para México).</div>
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label for="email" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="email" name="contact.email">
-                            </div>
-                            <div class="mb-3">
-                                <label for="scheduleText" class="form-
+                        `;
+                        
+                        gallery.appendChild(imageDiv);
+                        
+                        // Limpiar formulario
+                        fileInput.value = '';
+                        document.getElementById('imageTitle').value = '';
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    alert('Por favor selecciona una imagen primero');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
