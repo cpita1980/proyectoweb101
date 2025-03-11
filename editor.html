@@ -43,6 +43,7 @@
             overflow-y: auto;
             z-index: 1;
             padding: 1rem 0;
+            transition: transform 0.3s ease;
         }
         
         .sidebar-menu {
@@ -75,9 +76,16 @@
             font-weight: bold;
         }
         
+        .sidebar-link i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
         .content {
             margin-left: 250px;
             padding: 2rem;
+            transition: margin-left 0.3s ease;
         }
         
         .card {
@@ -90,6 +98,9 @@
             background-color: var(--primary);
             color: white;
             font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         
         .btn-primary {
@@ -129,10 +140,170 @@
             border-radius: 0.25rem;
         }
         
+        /* Nuevos estilos */
+        .sortable-list {
+            padding: 0;
+            list-style: none;
+        }
+        
+        .sortable-item {
+            padding: 1rem;
+            background-color: white;
+            border-radius: 0.25rem;
+            margin-bottom: 1rem;
+            border: 1px solid #dee2e6;
+            cursor: move;
+            position: relative;
+        }
+        
+        .sortable-item .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .sortable-item .item-title {
+            font-weight: bold;
+            margin: 0;
+        }
+        
+        .sortable-item-controls {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .sortable-item-content {
+            display: none;
+        }
+        
+        .sortable-item-content.show {
+            display: block;
+        }
+        
+        .dark-mode {
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+        
+        .dark-mode .card {
+            background-color: #1e1e1e;
+            color: #e0e0e0;
+        }
+        
+        .dark-mode .sidebar {
+            background-color: #1e1e1e;
+            border-right-color: #333;
+        }
+        
+        .dark-mode .sidebar-link {
+            color: #e0e0e0;
+        }
+        
+        .dark-mode .sidebar-link:hover {
+            background-color: #333;
+        }
+        
+        .dark-mode .form-control {
+            background-color: #333;
+            border-color: #444;
+            color: #e0e0e0;
+        }
+        
+        .dark-mode .form-text {
+            color: #aaa;
+        }
+        
+        .dark-mode .sortable-item {
+            background-color: #1e1e1e;
+            border-color: #333;
+        }
+        
+        .unsaved-changes {
+            background-color: #ffc107;
+            color: #212529;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-weight: bold;
+            font-size: 0.8rem;
+            margin-left: 1rem;
+            display: none;
+        }
+        
+        .media-preview {
+            max-width: 150px;
+            max-height: 150px;
+            border-radius: 0.25rem;
+            margin-top: 0.5rem;
+            display: block;
+        }
+        
+        .file-upload-wrapper {
+            position: relative;
+            margin-bottom: 1rem;
+        }
+        
+        .file-upload-wrapper input[type="file"] {
+            opacity: 0;
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+        
+        .file-upload-wrapper .file-upload-button {
+            display: inline-block;
+            padding: 0.375rem 0.75rem;
+            font-weight: 400;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            user-select: none;
+            border: 1px solid transparent;
+            border-radius: 0.25rem;
+            transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+            background-color: var(--secondary);
+            color: var(--dark);
+        }
+        
+        .file-upload-wrapper .file-upload-info {
+            margin-left: 0.5rem;
+            display: inline-block;
+        }
+        
+        .history-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .history-item {
+            padding: 0.5rem;
+            border-bottom: 1px solid #dee2e6;
+            cursor: pointer;
+        }
+        
+        .history-item:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .dark-mode .history-item:hover {
+            background-color: #333;
+        }
+        
+        .toast-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 9999;
+        }
+        
         @media (max-width: 992px) {
             .sidebar {
                 transform: translateX(-100%);
-                transition: transform 0.3s ease;
             }
             
             .sidebar.show {
@@ -160,10 +331,32 @@
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="index.html" target="_blank">Ver Sitio</a>
+                        <span class="unsaved-changes" id="unsaved-indicator">Cambios sin guardar</span>
                     </li>
                     <li class="nav-item">
-                        <button class="btn btn-outline-light btn-sm" id="save-config">Guardar Cambios</button>
+                        <a class="nav-link" href="index.html" target="_blank">Ver Sitio</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="themesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-paint-brush"></i> Temas
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="themesDropdown">
+                            <li><a class="dropdown-item" href="#" id="light-theme">Tema Claro</a></li>
+                            <li><a class="dropdown-item" href="#" id="dark-theme">Tema Oscuro</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="configDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-cogs"></i> Configuración
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="configDropdown">
+                            <li><a class="dropdown-item" href="#" id="save-config"><i class="fas fa-save"></i> Guardar Cambios</a></li>
+                            <li><a class="dropdown-item" href="#" id="import-config"><i class="fas fa-upload"></i> Importar Configuración</a></li>
+                            <li><a class="dropdown-item" href="#" id="export-config"><i class="fas fa-download"></i> Exportar Configuración</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" id="show-history"><i class="fas fa-history"></i> Historial de Cambios</a></li>
+                            <li><a class="dropdown-item" href="#" id="reset-config"><i class="fas fa-trash-alt"></i> Restablecer Valores</a></li>
+                        </ul>
                     </li>
                 </ul>
             </div>
@@ -174,40 +367,74 @@
     <div class="sidebar" id="sidebar">
         <ul class="sidebar-menu">
             <li class="sidebar-item">
-                <a href="#general" class="sidebar-link active" data-bs-toggle="tab">Información General</a>
+                <a href="#general" class="sidebar-link active" data-bs-toggle="tab">
+                    <i class="fas fa-info-circle"></i> Información General
+                </a>
             </li>
             <li class="sidebar-item">
-                <a href="#contact" class="sidebar-link" data-bs-toggle="tab">Contacto</a>
+                <a href="#contact" class="sidebar-link" data-bs-toggle="tab">
+                    <i class="fas fa-address-book"></i> Contacto
+                </a>
             </li>
             <li class="sidebar-item">
-                <a href="#colors" class="sidebar-link" data-bs-toggle="tab">Colores</a>
+                <a href="#colors" class="sidebar-link" data-bs-toggle="tab">
+                    <i class="fas fa-palette"></i> Colores
+                </a>
             </li>
             <li class="sidebar-item">
-                <a href="#hero" class="sidebar-link" data-bs-toggle="tab">Hero</a>
+                <a href="#hero" class="sidebar-link" data-bs-toggle="tab">
+                    <i class="fas fa-image"></i> Hero
+                </a>
             </li>
             <li class="sidebar-item">
-                <a href="#about" class="sidebar-link" data-bs-toggle="tab">Nosotros</a>
+                <a href="#about" class="sidebar-link" data-bs-toggle="tab">
+                    <i class="fas fa-building"></i> Nosotros
+                </a>
             </li>
             <li class="sidebar-item">
-                <a href="#services" class="sidebar-link" data-bs-toggle="tab">Servicios</a>
+                <a href="#services" class="sidebar-link" data-bs-toggle="tab">
+                    <i class="fas fa-tools"></i> Servicios
+                </a>
             </li>
             <li class="sidebar-item">
-                <a href="#cta" class="sidebar-link" data-bs-toggle="tab">CTA</a>
+                <a href="#cta" class="sidebar-link" data-bs-toggle="tab">
+                    <i class="fas fa-bullhorn"></i> CTA
+                </a>
             </li>
             <li class="sidebar-item">
-                <a href="#projects" class="sidebar-link" data-bs-toggle="tab">Proyectos</a>
+                <a href="#projects" class="sidebar-link" data-bs-toggle="tab">
+                    <i class="fas fa-hard-hat"></i> Proyectos
+                </a>
             </li>
             <li class="sidebar-item">
-                <a href="#testimonials" class="sidebar-link" data-bs-toggle="tab">Testimonios</a>
+                <a href="#testimonials" class="sidebar-link" data-bs-toggle="tab">
+                    <i class="fas fa-comment-dots"></i> Testimonios
+                </a>
             </li>
             <li class="sidebar-item">
-                <a href="#contactForm" class="sidebar-link" data-bs-toggle="tab">Formulario de Contacto</a>
+                <a href="#contactForm" class="sidebar-link" data-bs-toggle="tab">
+                    <i class="fas fa-envelope"></i> Formulario de Contacto
+                </a>
             </li>
             <li class="sidebar-item">
-                <a href="#footer" class="sidebar-link" data-bs-toggle="tab">Footer</a>
+                <a href="#footer" class="sidebar-link" data-bs-toggle="tab">
+                    <i class="fas fa-shoe-prints"></i> Footer
+                </a>
             </li>
             <li class="sidebar-item">
-                <a href="#preview" class="sidebar-link" data-bs-toggle="tab">Vista Previa</a>
+                <a href="#seo" class="sidebar-link" data-bs-toggle="tab">
+                    <i class="fas fa-search"></i> SEO
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="#analytics" class="sidebar-link" data-bs-toggle="tab">
+                    <i class="fas fa-chart-line"></i> Analytics
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="#preview" class="sidebar-link" data-bs-toggle="tab">
+                    <i class="fas fa-eye"></i> Vista Previa
+                </a>
             </li>
         </ul>
     </div>
@@ -221,8 +448,13 @@
                 <p class="text-muted">Configura la información general de la empresa.</p>
                 
                 <div class="card">
-                    <div class="card-header">Datos Principales</div>
-                    <div class="card-body">
+                    <div class="card-header">
+                        <span>Datos Principales</span>
+                        <button class="btn btn-sm btn-outline-light" type="button" data-bs-toggle="collapse" data-bs-target="#datosGeneralesCollapse" aria-expanded="true">
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                    </div>
+                    <div class="card-body collapse show" id="datosGeneralesCollapse">
                         <div class="mb-3">
                             <label for="companyName" class="form-label">Nombre de la Empresa</label>
                             <input type="text" class="form-control" id="companyName" name="companyInfo.name">
@@ -234,13 +466,41 @@
                         <div class="mb-3">
                             <label for="companyDescription" class="form-label">Descripción Breve</label>
                             <textarea class="form-control" id="companyDescription" rows="3" name="companyInfo.description"></textarea>
+                            <div class="form-text">Esta descripción se utilizará en la sección principal y en metadatos para SEO.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="logoUpload" class="form-label">Logo de la Empresa</label>
+                            <div class="file-upload-wrapper">
+                                <div class="file-upload-button">Seleccionar Imagen</div>
+                                <span class="file-upload-info">Ningún archivo seleccionado</span>
+                                <input type="file" id="logoUpload" accept="image/*">
+                            </div>
+                            <input type="hidden" name="companyInfo.logo" id="logoPath">
+                            <img id="logoPreview" class="media-preview" style="display: none;">
+                            <div class="form-text">Formatos recomendados: SVG, PNG con fondo transparente. Tamaño máximo: 500KB.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="faviconUpload" class="form-label">Favicon</label>
+                            <div class="file-upload-wrapper">
+                                <div class="file-upload-button">Seleccionar Imagen</div>
+                                <span class="file-upload-info">Ningún archivo seleccionado</span>
+                                <input type="file" id="faviconUpload" accept="image/png, image/x-icon, image/svg+xml">
+                            </div>
+                            <input type="hidden" name="companyInfo.favicon" id="faviconPath">
+                            <img id="faviconPreview" class="media-preview" style="max-width: 64px; max-height: 64px; display: none;">
+                            <div class="form-text">Formatos recomendados: ICO, PNG o SVG. Tamaño ideal: 32x32px o 64x64px.</div>
                         </div>
                     </div>
                 </div>
                 
                 <div class="card">
-                    <div class="card-header">Estadísticas</div>
-                    <div class="card-body">
+                    <div class="card-header">
+                        <span>Estadísticas</span>
+                        <button class="btn btn-sm btn-outline-light" type="button" data-bs-toggle="collapse" data-bs-target="#estadisticasCollapse" aria-expanded="true">
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                    </div>
+                    <div class="card-body collapse show" id="estadisticasCollapse">
                         <div class="mb-3">
                             <label for="yearFounded" class="form-label">Año de Fundación</label>
                             <input type="number" class="form-control" id="yearFounded" name="companyInfo.yearFounded">
@@ -259,6 +519,36 @@
                             <label for="clientsSatisfied" class="form-label">Clientes Satisfechos (%)</label>
                             <input type="number" class="form-control" id="clientsSatisfied" name="companyInfo.clientsSatisfied" min="0" max="100">
                         </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="squareMetersBuilt" class="form-label">Metros Cuadrados Construidos</label>
+                                <input type="number" class="form-control" id="squareMetersBuilt" name="companyInfo.squareMetersBuilt">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="employeesCount" class="form-label">Número de Empleados</label>
+                                <input type="number" class="form-control" id="employeesCount" name="companyInfo.employeesCount">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <span>Acreditaciones y Certificaciones</span>
+                        <button class="btn btn-sm btn-outline-light" type="button" data-bs-toggle="collapse" data-bs-target="#certificacionesCollapse" aria-expanded="true">
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                    </div>
+                    <div class="card-body collapse show" id="certificacionesCollapse">
+                        <div class="mb-3">
+                            <label class="form-label">Certificaciones</label>
+                            <div class="sortable-list" id="certifications-list">
+                                <!-- Los items se agregarán dinámicamente -->
+                            </div>
+                            <button type="button" class="btn btn-primary" id="add-certification">
+                                <i class="fas fa-plus"></i> Agregar Certificación
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -269,15 +559,36 @@
                 <p class="text-muted">Configura los datos de contacto de la empresa.</p>
                 
                 <div class="card">
-                    <div class="card-header">Datos de Contacto</div>
-                    <div class="card-body">
+                    <div class="card-header">
+                        <span>Datos de Contacto</span>
+                        <button class="btn btn-sm btn-outline-light" type="button" data-bs-toggle="collapse" data-bs-target="#datosContactoCollapse" aria-expanded="true">
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                    </div>
+                    <div class="card-body collapse show" id="datosContactoCollapse">
                         <div class="mb-3">
                             <label for="address" class="form-label">Dirección</label>
                             <input type="text" class="form-control" id="address" name="contact.address">
                         </div>
                         <div class="mb-3">
-                            <label for="phone" class="form-label">Teléfono</label>
-                            <input type="text" class="form-control" id="phone" name="contact.phone">
+                            <label for="mapLocation" class="form-label">Ubicación en Google Maps</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="mapLocation" name="contact.mapLocation" placeholder="Pega aquí el código de iframe de Google Maps">
+                                <button class="btn btn-outline-secondary" type="button" id="test-map">Probar</button>
+                            </div>
+                            <div class="form-text">Ingresa el código iframe completo obtenido desde Google Maps.</div>
+                            <div id="map-preview" class="mt-2" style="height: 200px; display: none;"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="phone" class="form-label">Teléfono</label>
+                                <input type="text" class="form-control" id="phone" name="contact.phone">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="whatsapp" class="form-label">WhatsApp</label>
+                                <input type="text" class="form-control" id="whatsapp" name="contact.whatsapp">
+                                <div class="form-text">Incluye el código de país (Ej: 52 para México).</div>
+                            </div>
                         </div>
                         <div class="mb-3">
                             <label for="email" class="form-label">Email</label>
@@ -286,28 +597,80 @@
                         <div class="mb-3">
                             <label for="scheduleText" class="form-label">Horario</label>
                             <input type="text" class="form-control" id="scheduleText" name="contact.scheduleText">
+                            <div class="form-text">Ejemplo: Lunes a Viernes de 9:00 a 18:00, Sábados de 9:00 a 13:00</div>
                         </div>
                     </div>
                 </div>
                 
                 <div class="card">
-                    <div class="card-header">Redes Sociales</div>
-                    <div class="card-body">
+                    <div class="card-header">
+                        <span>Redes Sociales</span>
+                        <button class="btn btn-sm btn-outline-light" type="button" data-bs-toggle="collapse" data-bs-target="#redesSocialesCollapse" aria-expanded="true">
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                    </div>
+                    <div class="card-body collapse show" id="redesSocialesCollapse">
                         <div class="mb-3">
-                            <label for="facebook" class="form-label">Facebook</label>
+                            <label for="facebook" class="form-label">
+                                <i class="fab fa-facebook"></i> Facebook
+                            </label>
                             <input type="text" class="form-control" id="facebook" name="contact.socialMedia.facebook">
+                            <div class="form-text">URL completa del perfil de Facebook</div>
                         </div>
                         <div class="mb-3">
-                            <label for="twitter" class="form-label">Twitter</label>
+                            <label for="twitter" class="form-label">
+                                <i class="fab fa-twitter"></i> Twitter / X
+                            </label>
                             <input type="text" class="form-control" id="twitter" name="contact.socialMedia.twitter">
+                            <div class="form-text">URL completa del perfil de Twitter</div>
                         </div>
                         <div class="mb-3">
-                            <label for="instagram" class="form-label">Instagram</label>
+                            <label for="instagram" class="form-label">
+                                <i class="fab fa-instagram"></i> Instagram
+                            </label>
                             <input type="text" class="form-control" id="instagram" name="contact.socialMedia.instagram">
+                            <div class="form-text">URL completa del perfil de Instagram</div>
                         </div>
                         <div class="mb-3">
-                            <label for="linkedin" class="form-label">LinkedIn</label>
+                            <label for="linkedin" class="form-label">
+                                <i class="fab fa-linkedin"></i> LinkedIn
+                            </label>
                             <input type="text" class="form-control" id="linkedin" name="contact.socialMedia.linkedin">
+                            <div class="form-text">URL completa del perfil de LinkedIn</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="youtube" class="form-label">
+                                <i class="fab fa-youtube"></i> YouTube
+                            </label>
+                            <input type="text" class="form-control" id="youtube" name="contact.socialMedia.youtube">
+                            <div class="form-text">URL completa del canal de YouTube</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="tiktok" class="form-label">
+                                <i class="fab fa-tiktok"></i> TikTok
+                            </label>
+                            <input type="text" class="form-control" id="tiktok" name="contact.socialMedia.tiktok">
+                            <div class="form-text">URL completa del perfil de TikTok</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <span>Sucursales Adicionales</span>
+                        <button class="btn btn-sm btn-outline-light" type="button" data-bs-toggle="collapse" data-bs-target="#sucursalesCollapse" aria-expanded="true">
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                    </div>
+                    <div class="card-body collapse show" id="sucursalesCollapse">
+                        <div class="mb-3">
+                            <label class="form-label">Listado de Sucursales</label>
+                            <div class="sortable-list" id="branches-list">
+                                <!-- Los items se agregarán dinámicamente -->
+                            </div>
+                            <button type="button" class="btn btn-primary" id="add-branch">
+                                <i class="fas fa-plus"></i> Agregar Sucursal
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -319,260 +682,4 @@
                 <p class="text-muted">Personaliza los colores de la web.</p>
                 
                 <div class="card">
-                    <div class="card-header">Paleta de Colores</div>
-                    <div class="card-body">
-                        <div class="mb-3">
-                            <label for="primaryColor" class="form-label">
-                                <span class="color-preview" id="primaryColorPreview"></span>
-                                Color Principal
-                            </label>
-                            <input type="color" class="form-control form-control-color" id="primaryColor" name="colors.primary">
-                            <div class="form-text">Se usa para fondos oscuros, textos y elementos destacados.</div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="secondaryColor" class="form-label">
-                                <span class="color-preview" id="secondaryColorPreview"></span>
-                                Color Secundario
-                            </label>
-                            <input type="color" class="form-control form-control-color" id="secondaryColor" name="colors.secondary">
-                            <div class="form-text">Se usa para acentos, botones y elementos destacados.</div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="darkColor" class="form-label">
-                                <span class="color-preview" id="darkColorPreview"></span>
-                                Color Oscuro
-                            </label>
-                            <input type="color" class="form-control form-control-color" id="darkColor" name="colors.dark">
-                            <div class="form-text">Se usa para el footer y algunos fondos oscuros.</div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="lightColor" class="form-label">
-                                <span class="color-preview" id="lightColorPreview"></span>
-                                Color Claro
-                            </label>
-                            <input type="color" class="form-control form-control-color" id="lightColor" name="colors.light">
-                            <div class="form-text">Se usa para fondos claros alternados.</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Other sections would be here -->
-            
-            <!-- Preview -->
-            <div class="tab-pane fade" id="preview">
-                <h2>Vista Previa</h2>
-                <p class="text-muted">Previsualiza cómo se verá tu sitio web con los cambios aplicados.</p>
-                
-                <div class="mb-3">
-                    <button class="btn btn-primary" id="refresh-preview">Actualizar Vista Previa</button>
-                </div>
-                
-                <iframe id="preview-iframe" src="index.html"></iframe>
-            </div>
-        </div>
-    </div>
-
-    <!-- JavaScript -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Load config
-            loadConfig();
-            
-            // Setup event listeners
-            setupEventListeners();
-            
-            // Setup color previews
-            setupColorPreviews();
-        });
-        
-        function loadConfig() {
-            // Load config.js
-            fetch('config.js')
-                .then(response => response.text())
-                .then(text => {
-                    // Extract config object from JavaScript
-                    const configMatch = text.match(/const\s+config\s*=\s*(\{[\s\S]*\});/);
-                    if (configMatch && configMatch[1]) {
-                        try {
-                            const configJson = configMatch[1].replace(/(\w+):/g, '"$1":');
-                            const config = JSON.parse(configJson);
-                            
-                            // Populate form fields
-                            populateFields(config);
-                        } catch (error) {
-                            console.error('Error parsing config:', error);
-                            alert('Error al cargar la configuración. Consulta la consola para más detalles.');
-                        }
-                    }
-                })
-                .catch(error => {
-                    console.error('Error loading config:', error);
-                    alert('Error al cargar la configuración. Consulta la consola para más detalles.');
-                });
-        }
-        
-        function populateFields(config) {
-            // Find all inputs with name attribute
-            const inputs = document.querySelectorAll('[name]');
-            
-            inputs.forEach(input => {
-                // Get the path from the name attribute
-                const path = input.getAttribute('name');
-                
-                // Get the value from the config
-                const value = getNestedValue(config, path);
-                
-                // Set the value to the input
-                if (value !== undefined) {
-                    if (input.type === 'checkbox') {
-                        input.checked = value;
-                    } else {
-                        input.value = value;
-                    }
-                }
-            });
-        }
-        
-        function getNestedValue(obj, path) {
-            const keys = path.split('.');
-            let current = obj;
-            
-            for (const key of keys) {
-                if (current === undefined || current === null) {
-                    return undefined;
-                }
-                
-                current = current[key];
-            }
-            
-            return current;
-        }
-        
-        function setupEventListeners() {
-            // Tab navigation
-            const tabLinks = document.querySelectorAll('.sidebar-link');
-            tabLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    
-                    // Remove active class from all links
-                    tabLinks.forEach(l => l.classList.remove('active'));
-                    
-                    // Add active class to clicked link
-                    this.classList.add('active');
-                    
-                    // Show the corresponding tab pane
-                    const target = this.getAttribute('href');
-                    const tabPane = document.querySelector(target);
-                    
-                    document.querySelectorAll('.tab-pane').forEach(pane => {
-                        pane.classList.remove('show', 'active');
-                    });
-                    
-                    tabPane.classList.add('show', 'active');
-                });
-            });
-            
-            // Toggle sidebar on mobile
-            const toggleSidebar = document.querySelector('.toggle-sidebar');
-            if (toggleSidebar) {
-                toggleSidebar.addEventListener('click', function() {
-                    const sidebar = document.getElementById('sidebar');
-                    sidebar.classList.toggle('show');
-                });
-            }
-            
-            // Save config
-            document.getElementById('save-config').addEventListener('click', saveConfig);
-            
-            // Refresh preview
-            document.getElementById('refresh-preview').addEventListener('click', function() {
-                const iframe = document.getElementById('preview-iframe');
-                iframe.src = iframe.src;
-            });
-        }
-        
-        function setupColorPreviews() {
-            // Preview colors on change
-            const colorInputs = document.querySelectorAll('input[type="color"]');
-            
-            colorInputs.forEach(input => {
-                const previewId = input.id + 'Preview';
-                const preview = document.getElementById(previewId);
-                
-                if (preview) {
-                    // Initial color
-                    preview.style.backgroundColor = input.value;
-                    
-                    // Update on change
-                    input.addEventListener('input', function() {
-                        preview.style.backgroundColor = this.value;
-                    });
-                }
-            });
-        }
-        
-        function saveConfig() {
-            // Get all inputs with name attribute
-            const inputs = document.querySelectorAll('[name]');
-            
-            // Build config object
-            const config = {};
-            
-            inputs.forEach(input => {
-                const path = input.getAttribute('name');
-                const keys = path.split('.');
-                
-                let current = config;
-                
-                // Create nested objects
-                for (let i = 0; i < keys.length - 1; i++) {
-                    const key = keys[i];
-                    
-                    if (!current[key]) {
-                        current[key] = {};
-                    }
-                    
-                    current = current[key];
-                }
-                
-                // Set value
-                const lastKey = keys[keys.length - 1];
-                
-                if (input.type === 'checkbox') {
-                    current[lastKey] = input.checked;
-                } else if (input.type === 'number') {
-                    current[lastKey] = parseFloat(input.value);
-                } else {
-                    current[lastKey] = input.value;
-                }
-            });
-            
-            // Build config.js content
-            const configContent = `/**
- * ARCHIVO DE CONFIGURACIÓN
- * -------------------------
- * Aquí puedes editar fácilmente textos y configuraciones de la web
- * sin necesidad de tocar HTML ni CSS
- */
-
-const config = ${JSON.stringify(config, null, 4)};`;
-            
-            // Create download link
-            const blob = new Blob([configContent], { type: 'application/javascript' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'config.js';
-            a.click();
-            
-            // Clean up
-            URL.revokeObjectURL(url);
-            
-            alert('Configuración guardada correctamente. Descarga el archivo y súbelo a tu servidor para aplicar los cambios.');
-        }
-    </script>
-</body>
-</html>
+                    <div class="card-header">
